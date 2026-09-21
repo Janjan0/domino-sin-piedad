@@ -30,8 +30,8 @@ jobs:
           unityVersion: 6000.3.0f1
           targetPlatform: Android
           androidExportType: androidPackage
-          androidArchitecture: ARM64
           buildMethod: BuildAndSetup.Build
+          allowDirtyBuild: true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
