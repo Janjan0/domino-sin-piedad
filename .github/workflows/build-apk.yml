@@ -1,0 +1,40 @@
+name: Build Domino Sin Piedad APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract Unity project
+        run: |
+          unzip -o domino-sin-piedad-github-apk-ready.zip -d extracted
+          shopt -s dotglob
+          cp -r extracted/* .
+          rm -rf extracted
+
+      - name: Build Android APK
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: .
+          unityVersion: 6000.3.0f1
+          targetPlatform: Android
+          androidExportType: androidPackage
+          androidArchitecture: ARM64
+          buildMethod: BuildAndSetup.Build
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Domino-Sin-Piedad-APK
+          path: build/**/*.apk
